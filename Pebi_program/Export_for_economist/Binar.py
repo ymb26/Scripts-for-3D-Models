@@ -1,11 +1,16 @@
 import struct
 import codecs
-#from pylab import plt
+
+import np as np
+# from pylab import plt
 import numpy as np
-#import matplotlib.colors as colors
+# import matplotlib.colors as colors
 import pandas as pd
 import openpyxl
-
+import io
+from datetime import datetime
+from datetime import timedelta, date
+from dateutil.relativedelta import relativedelta
 
 
 '''
@@ -76,50 +81,70 @@ def get_tab_from_bin(casename):
     df = DataFrame(array(unsmry[b'PARAMS']), columns=cols)
     del unsmry
     df['DAYS'] = df[b'TIME'].diff()
-    #df.to_csv("C:\\1\\test.xls", sep='\t')
-    #print(df)
+    # df.to_csv("C:\\1\\test.xls", sep='\t')
+    # print(df)
     df = df.T.drop_duplicates().T  # WBHP duplicated in output
     return df, wells_list
 
 
-#casename = r'carbon\RESULTS\carb_v15l6p'
 
-#casename = r'C:\1\1_Field\Р10-90_Oil_case\Р75\Data_P75_gmm50_0005\Data_P75_gmm50'
-casename = r'C:\1\1_Field\Multi_var_2\23_MVR\L_300_75_standart_15_0000\L_300_75_standart_15'
-#casename = r'/Users/yurabaronov/Desktop/PHYSGEO/test_model/L_300_75_standart_15_0000/L_300_75_standart_15'
+# casename = r'C:\1\1_Field\Р10-90_Oil_case\Р75\Data_P75_gmm50_0005\Data_P75_gmm50'
+
+# casename = r'C:\1\1_Field\Multi_var_2\23_MVR\L_300_75_standart_15_0000\L_300_75_standart_15'
+casename = r'/Users/yurabaronov/Desktop/PHYSGEO/test_model/L_300_75_standart_15_0000/L_300_75_standart_15'
+rdata_path = r'/Users/yurabaronov/Desktop/PHYSGEO/test_model/L_300_75_standart_15_0000/L_300_75_standart_15.rdata'
 
 df, wells_list = get_tab_from_bin(casename)
-wells_array = [b'1', b'2', b'3']
-unuse_wells
-list_of_params = [b'WOPT', b'WWPT', b'WGPT']
-print(len(wells_array))
+wells_array = [b'1', b'2', b'3']  ##well list
+wells_array_str = list()  ##well list - byte to str
+for well in wells_array:
+    wells_array_str.append(well.decode('utf-8'))
+list_of_params = [b'WOPT', b'WWPT', b'WGPT', b'WIT']
 arrays = [[], []]
-for param in list_of_params:
-    for i in range(len(wells_array)):
-        arrays[0].append(param)
-        arrays[1].append(wells_array[i])
-tuples = list(zip(*arrays)) ## ['WOPT', 'WOPT', 'WOPT', 'WWPT', 'WWPT', 'WWPT', ...][1, 2, 3, 1, 2, 3, ...]
-#index = pd.MultiIndex.from_tuples(arrays, names=["first", "second"])
-
+useless_wells_byte = list(set(wells_list) - set(wells_array))
+useless_wells_str = list()
+for well in useless_wells_byte:
+    useless_wells_str.append(well.decode('utf-8'))
+list_of_params = [x for x in list_of_params if x in df]
 df2 = df[list_of_params]
-print(df2[list_of_params].columns.levels)
+df2 = df2.rename(columns={b'WOPT': 'WOPT', b'WWPT': 'WWPT', b'WGPT': 'WGPT'})
+df2 = df2.rename(columns={b'SM3': str('SM3')})
+for well, well1 in zip(wells_array, wells_array_str):
+    df2 = df2.rename(columns={well: well1})
+for well, well1 in zip(useless_wells_byte, useless_wells_str):
+    df2 = df2.rename(columns={well: well1})
+for well in useless_wells_str:
+    try:
+        df2 = df2.drop(columns=well, level=1)
+    except:
+        continue
+df2['Timesteps'] = df['DAYS']
+df2['Times'] = df[b'TIME']
+file = open(rdata_path, 'r').readlines()
+for i in range(len(file)):
+    if "START" in file[i]:
+        start_date_str = file[i + 1][:file[i+1].find("/")].strip()
+        break
+start_date = datetime.strptime(start_date_str, "%d %b %Y")
+time_array = [start_date + timedelta(days=step) for step in df2['Times']]
 
-print(df2)
+
+df2['Date'] = np.array(time_array)
+##print(start_date + relativedelta(years=10))       #### plus years
+work_wells = list()
+sum_of_water = list()
+sum_of_oil = list()
+sum_of_gas = list()
+for index, row in df2.iterrows():
+    wells_iter = 0
+    oil_iter, water_iter, gas_iter = 0, 0, 0
+    for oil, water, gas in zip(row['WOPT'], row['WWPT'], row['WGPT']):
+        if oil != 0 or gas != 0 or water != 0:
+            wells_iter += 1
+    work_wells.append(wells_iter)
+df2['Work_wells'] = np.array(work_wells)
+#df2['Sum_oil'] = df2['WOPT'].sum
 
 
-
-
-
-
-#for p in list_of_params:
-#    print(df[p][[b'1', b'2', b'3']])
-#df1 = pd.DataFrame
-#df1['WWPT'] = df[b'WWPT']
-#df1.insert(1, "WWPT", [123,23])
-
-
-
-#for index, row in df.iterrows():
- #   print(row[b'WOPT'])
-
-df2.to_excel(r'C:\1\4_Scripts\Test_econom\econom.xlsx')
+df2.to_excel(r'/Users/yurabaronov/result_excel/econom.xlsx')
+df.to_excel(r'/Users/yurabaronov/result_excel/all.xlsx')
