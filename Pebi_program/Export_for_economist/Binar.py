@@ -2,8 +2,9 @@ import struct
 import codecs
 #from pylab import plt
 import numpy as np
-import matplotlib.colors as colors
+#import matplotlib.colors as colors
 import pandas as pd
+import openpyxl
 
 
 
@@ -84,11 +85,12 @@ def get_tab_from_bin(casename):
 #casename = r'carbon\RESULTS\carb_v15l6p'
 
 #casename = r'C:\1\1_Field\Р10-90_Oil_case\Р75\Data_P75_gmm50_0005\Data_P75_gmm50'
-#casename = r'C:\1\1_Field\Multi_var_2\23_MVR\L_300_75_standart_15_0000\L_300_75_standart_15'
-casename = r'/Users/yurabaronov/Desktop/PHYSGEO/test_model/L_300_75_standart_15_0000/L_300_75_standart_15'
+casename = r'C:\1\1_Field\Multi_var_2\23_MVR\L_300_75_standart_15_0000\L_300_75_standart_15'
+#casename = r'/Users/yurabaronov/Desktop/PHYSGEO/test_model/L_300_75_standart_15_0000/L_300_75_standart_15'
 
 df, wells_list = get_tab_from_bin(casename)
 wells_array = [b'1', b'2', b'3']
+unuse_wells
 list_of_params = [b'WOPT', b'WWPT', b'WGPT']
 print(len(wells_array))
 arrays = [[], []]
@@ -96,19 +98,28 @@ for param in list_of_params:
     for i in range(len(wells_array)):
         arrays[0].append(param)
         arrays[1].append(wells_array[i])
-tuples = list(zip(*arrays))
-print(tuples)
-#pd.MultiIndex.from_product(tuples, names=["first", "second"])
-#print(df)
-for p in list_of_params:
-    print(df[p][[b'1', b'2', b'3']])
-df1 = pd.DataFrame
+tuples = list(zip(*arrays)) ## ['WOPT', 'WOPT', 'WOPT', 'WWPT', 'WWPT', 'WWPT', ...][1, 2, 3, 1, 2, 3, ...]
+#index = pd.MultiIndex.from_tuples(arrays, names=["first", "second"])
+
+df2 = df[list_of_params]
+print(df2[list_of_params].columns.levels)
+
+print(df2)
+
+
+
+
+
+
+#for p in list_of_params:
+#    print(df[p][[b'1', b'2', b'3']])
+#df1 = pd.DataFrame
 #df1['WWPT'] = df[b'WWPT']
 #df1.insert(1, "WWPT", [123,23])
-df1.insert(1, "newcol", [99, 99])
+
 
 
 #for index, row in df.iterrows():
  #   print(row[b'WOPT'])
 
-#df.to_excel(r'C:\1\4_Scripts\Test_econom\econom.xlsx')
+df2.to_excel(r'C:\1\4_Scripts\Test_econom\econom.xlsx')
