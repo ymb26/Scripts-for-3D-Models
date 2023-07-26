@@ -1,10 +1,7 @@
 import struct
 import codecs
-
-import np as np
-# from pylab import plt
+import os
 import numpy as np
-# import matplotlib.colors as colors
 import pandas as pd
 import openpyxl
 import io
@@ -163,27 +160,34 @@ def binaryProcessing(df_all, casename, rdata_path):
     #print(yyy)
 
     #writer = pd.ExcelWriter(f'{os.path.join(graphs_dir, f"{i}.xlsx")}', engine='openpyxl', mode='a'
-    file = r'/Users/yurabaronov/result_excel/econom2.xlsx'
+    file = r'C:\1\4_Scripts\Test_econom\econom2.xlsx'
 
     #output_df.to_excel(r'/Users/yurabaronov/result_excel/econom2.xlsx')
     #df_all = pd.concat([pd.DataFrame(yyy), df], ignore_index=True)
-    df_all = df_all._append(pd.DataFrame(yyy2, columns=["%s" % casename[casename.rfind("/L_")+3:]]).T)
+    df_all = df_all._append(pd.DataFrame(yyy2, columns=["%s" % casename[casename.rfind("L_")+2:]]).T)
 
-    print(df_all)
+    #print(df_all)
 
-    df_all.to_excel(r'/Users/yurabaronov/result_excel/econom.xlsx', index='1')
-    df.to_excel(r'/Users/yurabaronov/result_excel/all.xlsx')
+    df_all.to_excel(r'C:\1\4_Scripts\Test_econom\econom.xlsx', index='1')
+    df.to_excel(r'C:\1\4_Scripts\Test_econom\all.xlsx')
 
     return df_all
 
 
 if __name__ == "__main__":
     df_all = pd.DataFrame()
+    path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR'
+    count = 1
+    for root, dirs, files in os.walk(path_folder_mvr):
+        feature_of_name = "L_"  ## change on what you search
+        if feature_of_name in root:
+            #print(count, os.path.join(root) + "\\" + os.path.join(root)[os.path.join(root).rfind("L_"):-5])
+            print(os.path.join(root)[os.path.join(root).rfind("L_"):-5])
+            casename = os.path.join(root) + "\\" + os.path.join(root)[os.path.join(root).rfind("L_"):-5]
+            df_all = binaryProcessing(df_all, casename, casename + ".rdata")
+            count += 1
 
-    casename = r'/Users/yurabaronov/Desktop/PHYSGEO/test_model/L_300_75_standart_12_0000/L_300_75_standart_12'
-    rdata_path = r'/Users/yurabaronov/Desktop/PHYSGEO/test_model/L_300_75_standart_12_0000/L_300_75_standart_12.rdata'
-    df_all = binaryProcessing(df_all, casename, rdata_path)
+    #casename = r'C:\1\1_Field\Multi_var_2\23_MVR\L_300_75_standart_12_0000\L_300_75_standart_12'
+    #rdata_path = r'C:\1\1_Field\Multi_var_2\23_MVR\L_300_75_standart_12_0000\L_300_75_standart_12.rdata'
+    #df_all = binaryProcessing(df_all, casename, casename + ".rdata")
 
-    casename2 = r'/Users/yurabaronov/Desktop/PHYSGEO/test_model/L_300_75_standart_15_0000/L_300_75_standart_15'
-    rdata_path2 = r'/Users/yurabaronov/Desktop/PHYSGEO/test_model/L_300_75_standart_15_0000/L_300_75_standart_15.rdata'
-    df_all = binaryProcessing(df_all, casename2, rdata_path2)
