@@ -153,23 +153,46 @@ def binaryProcessing(df_all, casename, rdata_path):
 
     output_df = pd.DataFrame()
 
-    for i in range(1, 11):
-        #xxx = df2.loc[df2['Date'] == begin_date + relativedelta(years=i), ['Total oil', 'Total water', 'Total gas']]
-        xxx = df2.loc[df2['Date'] == start_date + relativedelta(years=i), ['Total oil', 'Total water', 'Total gas']]    ##change - start date 01.01.2023
+    for i in range(0, 11):
+        #xxx = df2.loc[df2['Date'] == begin_date + relativedelta(years=i), ['Total oil', 'Total water', 'Total gas']]    ##when start well
+        xxx = df2.loc[df2['Date'] == start_date + relativedelta(years=i), ['Total oil', 'Total water', 'Total gas', 'Date']]    ##when start model
         output_df = pd.concat([output_df, xxx], axis=0, ignore_index=True)
     output_df = output_df.droplevel([0, 1, 2], axis=1)
-    output_df.columns = ['Total oil', 'Total water', 'Total gas']
+    output_df.columns = ['Total oil', 'Total water', 'Total gas', 'Date']
+    output_df.loc[0, 'Date'] = begin_date
+    output_df['Step'] = output_df['Date'].diff()
+    output_df['Diff oil'] = output_df['Total oil'].diff() / output_df['Step'].dt.days
+    output_df['Diff water'] = output_df['Total water'].diff() / output_df['Step'].dt.days
+    output_df['Diff liquid'] = output_df['Diff water'] + output_df['Diff oil']
+    #print(output_df)
+    output_df = output_df
+    #print(output_df)
+    ##########new df_all
+
+
+    #print(output_df.loc['Diff oil'])
+    #df_all = pd.concat(df_all, output_df.loc['Diff oil'], axis=0)
+    ####################
+
 
     yyy = list()
     for col in output_df.columns:
         yyy.append(output_df[col].to_string(index=False).split())
     yyy2 = [a for b in yyy for a in b]
+    df_all = df_all._append(pd.DataFrame(output_df['Diff oil'].values, columns=["%s_oil" % casename[casename.rfind("L_")+2:]]).T)
+    df_all = df_all._append(
+        pd.DataFrame(output_df['Diff water'].values, columns=["%s_water" % casename[casename.rfind("L_") + 2:]]).T)
+    df_all = df_all._append(
+        pd.DataFrame(output_df['Diff liquid'].values, columns=["%s_liquid" % casename[casename.rfind("L_") + 2:]]).T)
+    df_all = df_all._append(pd.Series([np.nan]), ignore_index=True)
+    #print(df_all)
 
 
-    df_all = df_all._append(pd.DataFrame(yyy2, columns=["%s" % casename[casename.rfind("L_")+2:]]).T)
+
+    #print(df_all)
     #df_all.to_excel(r'C:\1\4_Scripts\Test_econom\econom.xlsx', index='1')
-    df.to_excel(r'C:\1\4_Scripts\Test_econom\all.xlsx')
-    df2.to_excel(r'C:\1\4_Scripts\Test_econom\all2.xlsx')
+    #df.to_excel(r'C:\1\4_Scripts\Test_econom\all.xlsx')
+    #df2.to_excel(r'C:\1\4_Scripts\Test_econom\all2.xlsx')
     return df_all, df2
 
 
