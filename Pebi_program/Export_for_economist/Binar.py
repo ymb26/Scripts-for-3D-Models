@@ -109,6 +109,9 @@ def binaryProcessing(df_all, casename, rdata_path):
     df2 = df2.rename(columns={b'WOPT': 'WOPT', b'WWPT': 'WWPT', b'WGPT': 'WGPT', b'WIT': 'WIT', b'WOPR': 'WOPR', b'WWPR': 'WWPR', b'WGPR':'WGPR', b'WWCT': 'WWCT', b'WBHP': 'WBHP'})
 
     df2 = df2.rename(columns={b'SM3': str('SM3')})
+    df2 = df2.rename(columns={b'SM3/DAY': str('SM3/DAY')})
+    df2 = df2.rename(columns={b'BARSA': str('BARSA')})
+    df2 = df2.rename(columns={b'': str()})
     for well, well1 in zip(wells_array, wells_array_str):
         df2 = df2.rename(columns={well: "Well " + well1})
     for well, well1 in zip(useless_wells_byte, useless_wells_str):
@@ -164,10 +167,11 @@ def binaryProcessing(df_all, casename, rdata_path):
     output_df['Diff oil'] = output_df['Total oil'].diff() / output_df['Step'].dt.days
     output_df['Diff water'] = output_df['Total water'].diff() / output_df['Step'].dt.days
     output_df['Diff liquid'] = output_df['Diff water'] + output_df['Diff oil']
-    #print(output_df)
-    output_df = output_df
-    #print(output_df)
-    ##########new df_all
+    output_df['Diff gas'] = output_df['Total gas'].diff() / output_df['Step'].dt.days
+    for i in range(43):
+        output_df.loc[len(output_df.index)] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    output_df = output_df.fillna(0)
+
 
 
     #print(output_df.loc['Diff oil'])
@@ -177,15 +181,26 @@ def binaryProcessing(df_all, casename, rdata_path):
 
     yyy = list()
     for col in output_df.columns:
-        yyy.append(output_df[col].to_string(index=False).split())
+        yyy.append(output_df[col].to_string(index=True).split())
+    years_array = [i for i in range(2022, 2076)]
     yyy2 = [a for b in yyy for a in b]
-    df_all = df_all._append(pd.DataFrame(output_df['Diff oil'].values, columns=["%s_oil" % casename[casename.rfind("L_")+2:]]).T)
+    df_all = df_all._append(pd.DataFrame(output_df['Diff oil'].values, index=years_array, columns=["%s" % casename[casename.rfind("L_")+2:]]).T)
     df_all = df_all._append(
-        pd.DataFrame(output_df['Diff water'].values, columns=["%s_water" % casename[casename.rfind("L_") + 2:]]).T)
+        pd.DataFrame(output_df['Diff water'].values, index=years_array, columns=["%s" % casename[casename.rfind("L_") + 2:]]).T)
     df_all = df_all._append(
-        pd.DataFrame(output_df['Diff liquid'].values, columns=["%s_liquid" % casename[casename.rfind("L_") + 2:]]).T)
-    df_all = df_all._append(pd.Series([np.nan]), ignore_index=True)
-    #print(df_all)
+        pd.DataFrame(output_df['Diff liquid'].values, index=years_array, columns=["%s" % casename[casename.rfind("L_") + 2:]]).T)
+    df_all = df_all._append(
+        pd.DataFrame(output_df['Diff gas'].values, index=years_array, columns=["%s" % casename[casename.rfind("L_") + 2:]]).T)
+
+
+    #for i in range(9):
+    #    df_all = df_all._append(pd.Series([np.nan], name="%s" %casename[casename.rfind("L_") + 2:]))
+    #df_all = df_all._append(pd.Series([np.nan], name=""))
+
+
+
+
+    #df_all.loc[len(df_all.index)] = df_all.columns
 
 
 
@@ -193,26 +208,29 @@ def binaryProcessing(df_all, casename, rdata_path):
     #df_all.to_excel(r'C:\1\4_Scripts\Test_econom\econom.xlsx', index='1')
     #df.to_excel(r'C:\1\4_Scripts\Test_econom\all.xlsx')
     #df2.to_excel(r'C:\1\4_Scripts\Test_econom\all2.xlsx')
+    df = df.astype(str)
+    #print(df2)
     return df_all, df2
 
 
 
 if __name__ == "__main__":
     df_all = pd.DataFrame()
-    path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR'
+    #path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_additional_cases'
+    path_folder_mvr = r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\MVR\model'
+    #path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR'
     count = 1
-    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\all2.xlsx', engine="openpyxl") as writer:
+    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\add.xlsx', engine="openpyxl") as writer:
         for root, dirs, files in os.walk(path_folder_mvr):
             feature_of_name = "L_"  ## change on what you search
             if feature_of_name in root:
-                print(os.path.join(root)[os.path.join(root).rfind("L_"):-5])
-                casename = os.path.join(root) + "\\" + os.path.join(root)[os.path.join(root).rfind("L_"):-5]
-                binaryProcessing(df_all, casename, casename + ".rdata")
+                casename = os.path.join(root) + "\\" + os.path.join(root)[os.path.join(root).rfind("L_"):-5]    ## rfind('\\')
                 df_all, df2 = binaryProcessing(df_all, casename, casename + ".rdata")
-                df2.to_excel(writer, sheet_name=os.path.join(root)[os.path.join(root).rfind("L_"):-5])
-                #count += 1
+                df2.to_excel(writer, sheet_name=casename[casename.rfind("\\L_") + 1:])
+                print(casename[casename.rfind("\\L_") +1:])
+                count += 1
             df_all.to_excel(r'C:\1\4_Scripts\Test_econom\econom.xlsx', index='1')
-
+        #df_all = df_all.astype(float)
     #casename = r'C:\1\1_Field\Multi_var_2\23_MVR\L_300_75_standart_12_0000\L_300_75_standart_12'
     #rdata_path = r'C:\1\1_Field\Multi_var_2\23_MVR\L_300_75_standart_12_0000\L_300_75_standart_12.rdata'
     #df_all = binaryProcessing(df_all, casename, casename + ".rdata")
