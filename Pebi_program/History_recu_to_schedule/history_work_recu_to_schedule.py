@@ -31,7 +31,5 @@ for index, row in df2.iterrows():
     file_out.write("\'" + row['WELL'] + "\'" + '\t' + "\'OPEN\'\t\'LRAT\'\t" + str(fRoanding(row['QOIL'])) + '\t' +
                    str(fRoanding(row['QWAT'])) + '\t' + str(fRoanding(row['QGAS'])) + "\t3*\t" +
                    str(fRoanding(row['BHP'])) + "\t/\n/\n")
-    #if row['flag']:
-    #file_out.write("/\n")
-    file_out.write("WELTARG\n" + "\'" + str(row['WELL']) + "\'\t" + str(30) + "\t/\n/\n")
+    #file_out.write("WELTARG\n" + "\'" + str(row['WELL']) + "\'\t" + str(30) + "\t/\n/\n")
     file_out.write("WEFAC\n" + "\'" + str(row['WELL']) + "\'\t" + str(row['WEFA']) + "\t/\n/\n")
