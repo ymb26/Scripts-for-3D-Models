@@ -1,5 +1,5 @@
-path_infile = r'C:\1\4_Scripts\Test_EasyFracfile\23_MVR_2_case\WELLTRACKS\WELLTRACK_longitudinal.txt'
-path_outfile = r'C:\1\4_Scripts\Test_EasyFracfile\23_MVR_2_case\Fracfiles\Fracfile_300_75_standart_12_longitudinal.txt'
+path_infile = r'C:\1\1_Field\PRIOBKA\for new\welltracks_olya\WELLTRACKS\WELLTRACK_10_wells.txt'
+path_outfile = r'C:\1\1_Field\PRIOBKA\for new\welltracks_olya\WELLTRACKS\Fracfile_10.txt'
 
 def writeFractuleFile(MD, number_well, path_outfile):
     out_file = open(path_outfile, 'a')

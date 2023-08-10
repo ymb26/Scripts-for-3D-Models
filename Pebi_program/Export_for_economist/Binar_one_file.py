@@ -191,10 +191,10 @@ def binaryProcessing(casename, rdata_path):
 
 
 if __name__ == "__main__":
-    casename = r'C:\1\1_Field\Multi_var_2\18_10_years_project_well\Y_10_years_150_50_with_all_degr_alter_0000\Y_10_years_150_50_with_all_degr_alter'
+    casename = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case\6_PPD_longitudinal_recu_schedule_no_PPD_0000\6_PPD_longitudinal_recu_schedule_no_PPD'
     df2 = binaryProcessing(casename, casename + ".rdata")
     print(df2)
-    #df2.to_excel(r'C:\1\4_Scripts\Test_econom\10_1.xlsx')
+    df2.to_excel(r'C:\1\4_Scripts\Test_econom\PPD\no_ppd_new_frac.xlsx')
 
 
     #df2.to_excel(writer, sheet_name=casename[casename.rfind("\\L_") + 1:])

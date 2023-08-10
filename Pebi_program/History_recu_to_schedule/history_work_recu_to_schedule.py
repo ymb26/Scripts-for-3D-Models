@@ -5,8 +5,8 @@ from datetime import datetime
 def fRoanding(number):
     return "{:.2f}".format(number)
 
-in_path = r'C:\1\4_Scripts\HIST.txt'
-out_path = r'C:\1\4_Scripts\HIST_schedule.txt'
+in_path = r'C:\1\1_Field\PRIOBKA\Priobskoe_zapusk_221\20230803_RECU_FORECAST_NOPPD_NEW50_new_data_sort_Y.inc'
+out_path = r'C:\1\1_Field\PRIOBKA\Priobskoe_zapusk_221\20230803_RECU_FORECAST_NOPPD_NEW50_new_data_sort_Y_recu_to_schedule.inc'
 
 df = pd.read_csv(in_path, delimiter='\t', names=['WELL', 'DD.MM.YYYY', 'QOIL', 'QWAT', 'BHP', 'WEFA', 'QWIN', 'QGAS'])
 df['DD.MM.YYYY'] = pd.to_datetime(df['DD.MM.YYYY'], dayfirst=True).dt.date

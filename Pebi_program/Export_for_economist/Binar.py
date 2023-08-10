@@ -178,59 +178,43 @@ def binaryProcessing(df_all, casename, rdata_path):
     #df_all = pd.concat(df_all, output_df.loc['Diff oil'], axis=0)
     ####################
 
-
+    '''
     yyy = list()
     for col in output_df.columns:
         yyy.append(output_df[col].to_string(index=True).split())
     years_array = [i for i in range(2022, 2076)]
     yyy2 = [a for b in yyy for a in b]
-    df_all = df_all._append(pd.DataFrame(output_df['Diff oil'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\L_")+3:]]).T)
+    df_all = df_all._append(pd.DataFrame(output_df['Diff oil'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\4_")+3:]]).T)
     df_all = df_all._append(
-        pd.DataFrame(output_df['Diff water'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\L_") + 3:]]).T)
+        pd.DataFrame(output_df['Diff water'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\4_") + 3:]]).T)
     df_all = df_all._append(
-        pd.DataFrame(output_df['Diff liquid'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\L_") + 3:]]).T)
+        pd.DataFrame(output_df['Diff liquid'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\4_") + 3:]]).T)
     df_all = df_all._append(
-        pd.DataFrame(output_df['Diff gas'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\L_") + 3:]]).T)
+        pd.DataFrame(output_df['Diff gas'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\4_") + 3:]]).T)
 
 
     for i in range(8):
         df_all = df_all._append(pd.Series([np.nan], name="%s" %casename[casename.rfind("\\L_") + 3:]))
-    #df_all = df_all._append(pd.Series(years_array, name=""))
     df_all = df_all._append(pd.Series([np.nan], name=""))
     df_all = df_all._append(pd.Series([np.nan], name=""))
-
-
-
-
-    #df_all.loc[len(df_all.index)] = df_all.columns
-
-
-
+    '''
     #print(df_all)
-    #df_all.to_excel(r'C:\1\4_Scripts\Test_econom\econom.xlsx', index='1')
-    #df.to_excel(r'C:\1\4_Scripts\Test_econom\all.xlsx')
-    #df2.to_excel(r'C:\1\4_Scripts\Test_econom\all2.xlsx')
-    df = df.astype(str)
-    #print(df2)
     return df_all, df2
 
 
 
 if __name__ == "__main__":
     df_all = pd.DataFrame()
-    #path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_additional_cases'
-    path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_additional_cases'
-    #path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR'
+    path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case'
+    #path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case'
     count = 1
-    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\additional_cases\add.xlsx', engine="openpyxl") as writer:
+    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\PPD\nadd.xlsx', engine="openpyxl") as writer:
         for root, dirs, files in os.walk(path_folder_mvr):
-            feature_of_name = "L_"  ## change on what you search
+            feature_of_name = "6_PPD_longitudinal_recu_schedule_no_PPD_0000"  ## change on what you search
             if feature_of_name in root:
-                casename = os.path.join(root) + "\\" + os.path.join(root)[os.path.join(root).rfind("\\L_"):-5]    ## rfind('\\')
-                #print(casename)
+                casename = os.path.join(root) + "\\" + os.path.join(root)[os.path.join(root).rfind("\\6_"):-5]    ## rfind('\\')
+                print(casename)
                 df_all, df2 = binaryProcessing(df_all, casename, casename + ".rdata")
-                df2.to_excel(writer, sheet_name=casename[casename.rfind("\\L_") + 1:])
-                #print(casename[casename.rfind("\\L_") +1:])
-                #count += 1
-            df_all.to_excel(r'C:\1\4_Scripts\Test_econom\additional_cases\econom.xlsx', index='1')
+                df2.to_excel(writer, sheet_name=casename[casename.rfind("\\6_") + 1:])
+            #df_all.to_excel(r'C:\1\4_Scripts\Test_econom\PPD\econom.xlsx', index='1')
 

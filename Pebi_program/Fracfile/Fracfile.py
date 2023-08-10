@@ -3,6 +3,7 @@ import os
 #path_outfile = "C:\\1\\1_Field\\OPR\\FRACFILE_new2.txt"
 
 def makeDataFiles(path_in, path_out, type_design, value, folder_of_length, number_well, name_of_wracfile_path, amount_of_stages, count):
+
     file_in = open(path_in, "r")
     file_out = open(path_out, "w")
 
@@ -73,25 +74,25 @@ def readInFile(path_infile, path_outfile, type_design, value, folder_of_length, 
     out_file = open(path_outfile, 'a')
     out_file.write("/\n")
 
-    path_data_file = r'C:\1\1_Field\Multi_var_2\23_MVR_additional_cases\L_base_for_mvr_additional_cases.data'   ####
-    path_out_data_file = r'C:\1\1_Field\Multi_var_2\23_MVR_additional_cases'                                    ####
+    path_data_file = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\L_base_for_mvr.data'   ####
+    path_out_data_file = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m'                                    ####
     makeDataFiles(path_data_file, path_out_data_file + '\L_' + str(folder_of_length) + "_" + str(value) + str(type_design) + str(amount_of_stages) + '.data', type_design, value, folder_of_length, number_well, name_of_wracfile_path, amount_of_stages, count)
 
 def findAllFiles():
     #path_in = r'C:\1\2_Work_files\SPD\MVR\ForGDM'
     #path_out = r'C:\1\2_Work_files\SPD\MVR\Fracfiles\Test_multi_out'
-    path_in = r'C:\1\1_Field\Multi_var_2\23_MVR_additional_cases\WELLTRACKS'            ####
-    path_out = r'C:\1\1_Field\Multi_var_2\23_MVR_additional_cases\Fracfiles'            ####
+    path_in = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\WELLTRACKS\600_M_welltrack'            ####
+    path_out = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\Fracfiles'            ####
 
-    list_of_file = open(r'C:\1\1_Field\Multi_var_2\23_MVR_additional_cases\list_of_data.txt', 'w')    ####
-    list_of_file.close()
+    #list_of_file = open(r'C:\1\1_Field\Multi_var_2\23_MVR_additional_cases\list_of_data.txt', 'w')    ####
+    #list_of_file.close()
 
     #variant_mass_of_prop = {300: [75, 100, 125, 150], 500: [75, 100, 125, 150, 175, 200], 700: [150, 175, 200, 225, 250]}
     #variant_type_of_design = {500: ["_hybrid_", "_hybridPAA_", "_standart_"], 300:["_standart_"], 700:["_hybrid_", "_hybridPAA_"]}
 
-    variant_mass_of_prop = {300: [], 500: [75, 125, 175], 700: []}  ###### change
-    variant_type_of_design = {500: ["_hybridPAA_Q10_", "_PAA_Q8_", "_PAA_XL_Q6_", "_stPAA_"], 300:[], 700:[]}   ###### change
-    variant_stages = [15]   ###### change
+    variant_mass_of_prop = {300: [], 500: [], 700: [], 600: [75, 100, 125, 150, 175, 200, 225, 250] }  ###### change
+    variant_type_of_design = {500: [], 300:[], 700:[], 600:["_hybrid_", "_hybridPAA_"]}   ###### change
+    variant_stages = [12]   ###### change
 
     count = 1
     for root, dirs, files in os.walk(path_in):

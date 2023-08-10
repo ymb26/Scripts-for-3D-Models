@@ -1,5 +1,4 @@
 import pandas as pd
-import chardet
 import openpyxl
 import numpy as np
 import os
@@ -43,8 +42,8 @@ def makeWellTrack(path_in, path_out):
 
 
 def findAllFiles():
-    path_in = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case'
-    path_out = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case\WELLTRACKS'
+    path_in = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\WELLTRACKS\600_M_welltrack'
+    path_out = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\WELLTRACKS\600_M_welltrack'
     count = 1
     for root, dirs, files in os.walk(path_in):
         for file in files:
