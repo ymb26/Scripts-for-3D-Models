@@ -88,7 +88,7 @@ def get_tab_from_bin(casename):
 # casename = r'C:\1\1_Field\Р10-90_Oil_case\Р75\Data_P75_gmm50_0005\Data_P75_gmm50'
 
 # casename = r'C:\1\1_Field\Multi_var_2\23_MVR\L_300_75_standart_15_0000\L_300_75_standart_15'
-def binaryProcessing(df_all, casename, rdata_path):
+def binaryProcessing(df_all, casename, rdata_path, count):
 
     ##global begin_date
     df, wells_list = get_tab_from_bin(casename)
@@ -149,18 +149,27 @@ def binaryProcessing(df_all, casename, rdata_path):
                 begin_date = df2['Date'].iloc[idx - 1]  # start data rate - (example start - 01.01.2023 q = 0)
                 flag = 1
         work_wells.append(wells_iter)
-    #df2['Work_wells'] = np.array(work_wells)
+
 
     for p, total in zip(list_of_params, ['Total oil', 'Total water', 'Total gas']):
         df2[total] = df2[p.decode('utf-8')].sum(axis=1)
+
+
+    #df3 = df2['WOPT']['Well 2']
+    df3 = pd.DataFrame()
+    df3.insert(0, 'Total gas', df2['WGPT']['Well 2'])
+    df3.insert(0, 'Total water', df2['WWPT']['Well 2'])
+    df3.insert(0, 'Total oil', df2['WOPT']['Well 2'])
+    df3.insert(0, 'Date', df2['Date'])
+    #print(df3)
 
     output_df = pd.DataFrame()
 
     for i in range(0, 11):
         #xxx = df2.loc[df2['Date'] == begin_date + relativedelta(years=i), ['Total oil', 'Total water', 'Total gas']]    ##when start well
-        xxx = df2.loc[df2['Date'] == start_date + relativedelta(years=i), ['Total oil', 'Total water', 'Total gas', 'Date']]    ##when start model
+        xxx = df3.loc[df3['Date'] == start_date + relativedelta(years=i), ['Total oil', 'Total water', 'Total gas', 'Date']]    ##when start model
         output_df = pd.concat([output_df, xxx], axis=0, ignore_index=True)
-    output_df = output_df.droplevel([0, 1, 2], axis=1)
+    #output_df = output_df.droplevel([0, 1, 2], axis=1)
     output_df.columns = ['Total oil', 'Total water', 'Total gas', 'Date']
     output_df.loc[0, 'Date'] = begin_date
     output_df['Step'] = output_df['Date'].diff()
@@ -173,48 +182,46 @@ def binaryProcessing(df_all, casename, rdata_path):
     output_df = output_df.fillna(0)
 
 
-
-    #print(output_df.loc['Diff oil'])
-    #df_all = pd.concat(df_all, output_df.loc['Diff oil'], axis=0)
-    ####################
-
-    '''
     yyy = list()
     for col in output_df.columns:
         yyy.append(output_df[col].to_string(index=True).split())
     years_array = [i for i in range(2022, 2076)]
     yyy2 = [a for b in yyy for a in b]
-    df_all = df_all._append(pd.DataFrame(output_df['Diff oil'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\4_")+3:]]).T)
+    df_all = df_all._append(pd.DataFrame(output_df['Diff oil'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\")+3:]]).T)
     df_all = df_all._append(
-        pd.DataFrame(output_df['Diff water'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\4_") + 3:]]).T)
+        pd.DataFrame(output_df['Diff water'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\")+ 3:]]).T)
     df_all = df_all._append(
-        pd.DataFrame(output_df['Diff liquid'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\4_") + 3:]]).T)
+        pd.DataFrame(output_df['Diff liquid'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\") + 3:]]).T)
     df_all = df_all._append(
-        pd.DataFrame(output_df['Diff gas'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\4_") + 3:]]).T)
+        pd.DataFrame(output_df['Diff gas'].values, index=years_array, columns=["%s" % casename[casename.rfind("\\") + 3:]]).T)
 
 
     for i in range(8):
         df_all = df_all._append(pd.Series([np.nan], name="%s" %casename[casename.rfind("\\L_") + 3:]))
     df_all = df_all._append(pd.Series([np.nan], name=""))
     df_all = df_all._append(pd.Series([np.nan], name=""))
-    '''
-    #print(df_all)
-    return df_all, df2
+
+    print(count)
+    #print(output_df)
+    return df_all, df2, output_df
 
 
 
 if __name__ == "__main__":
     df_all = pd.DataFrame()
-    path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case'
+    path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case\Results\23_MVR_2_cases'
     #path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case'
     count = 1
-    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\PPD\nadd.xlsx', engine="openpyxl") as writer:
-        for root, dirs, files in os.walk(path_folder_mvr):
-            feature_of_name = "6_PPD_longitudinal_recu_schedule_no_PPD_0000"  ## change on what you search
-            if feature_of_name in root:
-                casename = os.path.join(root) + "\\" + os.path.join(root)[os.path.join(root).rfind("\\6_"):-5]    ## rfind('\\')
-                print(casename)
-                df_all, df2 = binaryProcessing(df_all, casename, casename + ".rdata")
-                df2.to_excel(writer, sheet_name=casename[casename.rfind("\\6_") + 1:])
-            #df_all.to_excel(r'C:\1\4_Scripts\Test_econom\PPD\econom.xlsx', index='1')
+    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\PPD\Export_Pebi.xlsx', engine="openpyxl") as writer:
+        with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\PPD\Intermediate_version.xlsx', engine="openpyxl") as writer2:
+            for root, dirs, files in os.walk(path_folder_mvr):
+                feature_of_name = "L_"  ## change on what you search
+                if feature_of_name in root:
+                    casename = os.path.join(root) + "\\" + os.path.join(root)[os.path.join(root).rfind("\\"):-5]    ## rfind('\\')
+                    print(casename)
+                    df_all, df2, output_df = binaryProcessing(df_all, casename, casename + ".rdata", count)
+                    df2.to_excel(writer, sheet_name=casename[casename.rfind("\\")+1:])
+                    output_df.to_excel(writer2, sheet_name=casename[casename.rfind("\\") + 1:])
+                    count += 1
+                #df_all.to_excel(r'C:\1\4_Scripts\Test_econom\PPD\econom.xlsx', index='1')
 

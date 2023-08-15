@@ -4,6 +4,7 @@ import os
 import numpy as np
 import pandas as pd
 import openpyxl
+from openpyxl.chart import Reference, BarChart, LineChart
 import io
 from datetime import datetime
 from datetime import timedelta, date
@@ -92,7 +93,7 @@ def binaryProcessing(casename, rdata_path):
 
     ##global begin_date
     df, wells_list = get_tab_from_bin(casename)
-    df.to_excel(r'C:\1\4_Scripts\Test_econom\10_1.xlsx')
+    #df.to_excel(r'C:\1\4_Scripts\Test_econom\10_1.xlsx')
     wells_array = [b'1', b'2', b'3']  ##well list
     wells_array_str = list()  ##well list - byte to str
     for well in wells_array:
@@ -155,6 +156,14 @@ def binaryProcessing(casename, rdata_path):
     for p, total in zip(list_of_params, ['Total oil', 'Total water', 'Total gas']):
         df2[total] = df2[p.decode('utf-8')].sum(axis=1)
 
+    df3 = pd.DataFrame()
+    df3.insert(0, 'Total gas', df2['WGPT']['Well 2'])
+    df3.insert(0, 'Total water', df2['WWPT']['Well 2'])
+    df3.insert(0, 'Total oil', df2['WOPT']['Well 2'])
+    df3.insert(0, 'Date', df2['Date'])
+
+
+
     output_df = pd.DataFrame()
 
     for i in range(0, 11):
@@ -186,15 +195,20 @@ def binaryProcessing(casename, rdata_path):
     years_array = [i for i in range(2022, 2076)]
     yyy2 = [a for b in yyy for a in b]
 
-    return df
+    return df, df2
 
 
 
 if __name__ == "__main__":
-    casename = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case\6_PPD_longitudinal_recu_schedule_no_PPD_0000\6_PPD_longitudinal_recu_schedule_no_PPD'
-    df2 = binaryProcessing(casename, casename + ".rdata")
+    casename = r'C:\1\1_Field\Multi_var_2\23_MVR_copy\L_500_200_HybridPAA_15_0000\L_500_200_HybridPAA_15'
+    df2, df3 = binaryProcessing(casename, casename + ".rdata")
     print(df2)
-    df2.to_excel(r'C:\1\4_Scripts\Test_econom\PPD\no_ppd_new_frac.xlsx')
+    #df3 = df3.str.decode('utf-8')
+    #for col in df2:
+        #df[col] = df2[col]
+    df2.to_excel(r'C:\1\4_Scripts\Test_econom\L_500_200_HybridPAA_15.xlsx')
+    df3.to_excel(r'C:\1\4_Scripts\Test_econom\L_500_200_HybridPAA_15_2.xlsx')
+
 
 
     #df2.to_excel(writer, sheet_name=casename[casename.rfind("\\L_") + 1:])
