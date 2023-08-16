@@ -77,8 +77,6 @@ def get_tab_from_bin(casename):
     spec = read_bin(casename + '.SMSPEC')  # Summary specification file
     start_date = spec.get(b'STARTDAT')
     kw, kn, un = list(map(list_strip, (b'KEYWORDS', b'WGNAMES', b'UNITS')))
-    wells_list = list(set(kn))
-    print(wells_list)
     wells_list = list(set(kn) - set((b':+:+:+:+',)))
     cols = [kw, kn, spec[b'NUMS'][0], un]  # 'NUMS' = CELL | REGION NUMBER
     unsmry = read_bin(casename + '.UNSMRY')  # Unified summary file
@@ -88,20 +86,20 @@ def get_tab_from_bin(casename):
     df = df.T.drop_duplicates().T  # WBHP duplicated in output
     s = date(*start_date[0][::-1])
     df.index = [s + timedelta(value) for index, value in df[b'TIME'].itertuples()]
-    print(wells_list)
-    print(dfюшт)
+
     return df, wells_list
-
-
-
 
 def binaryProcessing(casename):
     df, wells_list = get_tab_from_bin(casename)
-    df.to_excel(r'C:\1\4_Scripts\Test_econom\1.xlsx')
+    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\Export_wells.xlsx') as writer:
+        for elem in sorted(wells_list):
+            print(df.xs(elem, level="wgname", axis=1, drop_level=False))
+            df.xs(elem, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=elem)
+    #df.to_excel(r'C:\1\4_Scripts\Test_econom\1.xlsx')
 
 
 if __name__ == "__main__":
-    casename = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case\Results\23_MVR_2_cases\4_PPD_recu_schedule_350_0000\4_PPD_recu_schedule_350'
+    casename = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\L_600_75_hybrid_12_0000\L_600_75_hybrid_12'
     binaryProcessing(casename)
 
 
