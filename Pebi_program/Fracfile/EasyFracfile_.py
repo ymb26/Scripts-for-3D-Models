@@ -8,11 +8,11 @@ def writeFractuleFile(MD, number_well, path_outfile):
         if MD[i] == 0:
             out_file.write("\n")
             break
-        out_file.write(str(number_well) + "_stage_" + str(i + 1) + '\t1\t' + "JUN\t2023\tMD\t" + str(round(MD[i], 1)) + '\t')
+        out_file.write(str(number_well) + "_stage_" + str(i + 1) + '\t1\t' + "JUN\t2023\tMD\t")
         if i == 0:
-            out_file.write(str(round(MD[i], 1) - 0.5))
+            out_file.write(str(round(MD[i], 1) - 0.5) + '\t' + str(round(MD[i], 1)))
         else:
-            out_file.write(str(round(MD[i], 1) + 0.5))
+            out_file.write(str(round(MD[i], 1)) + '\t' + str(round(MD[i], 1) + 0.5))
 
         out_file.write("\t\'%s.txt\'\t/\n" % number_well)
         i += 1
