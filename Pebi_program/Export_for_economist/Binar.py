@@ -209,11 +209,11 @@ def binaryProcessing(df_all, casename, rdata_path, count):
 
 if __name__ == "__main__":
     df_all = pd.DataFrame()
-    path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case\Results\23_MVR_2_cases'
+    path_folder_mvr = r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\500_75_100_125'
     #path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case'
     count = 1
-    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\PPD\Export_Pebi.xlsx', engine="openpyxl") as writer:
-        with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\PPD\Intermediate_version.xlsx', engine="openpyxl") as writer2:
+    with pd.ExcelWriter(r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\500_75_100_125\Export_Pebi.xlsx', engine="openpyxl") as writer:
+        with pd.ExcelWriter(r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\500_75_100_125\Intermediate_version.xlsx', engine="openpyxl") as writer2:
             for root, dirs, files in os.walk(path_folder_mvr):
                 feature_of_name = "L_"  ## change on what you search
                 if feature_of_name in root:

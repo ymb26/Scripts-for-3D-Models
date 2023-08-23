@@ -195,19 +195,34 @@ def binaryProcessing(casename, rdata_path):
     years_array = [i for i in range(2022, 2076)]
     yyy2 = [a for b in yyy for a in b]
 
+    print(df)
     return df, df2
 
 
 
 if __name__ == "__main__":
-    casename = r'C:\1\1_Field\Multi_var_2\23_MVR_copy\L_500_200_HybridPAA_15_0000\L_500_200_HybridPAA_15'
-    df2, df3 = binaryProcessing(casename, casename + ".rdata")
-    print(df2)
-    #df3 = df3.str.decode('utf-8')
-    #for col in df2:
-        #df[col] = df2[col]
-    df2.to_excel(r'C:\1\4_Scripts\Test_econom\L_500_200_HybridPAA_15.xlsx')
-    df3.to_excel(r'C:\1\4_Scripts\Test_econom\L_500_200_HybridPAA_15_2.xlsx')
+    #trushko = [r'C:\1\1_Field\Multi_var_2\Big_data_result\L_500_125_standart_15_only_two_0000',
+    #           r'C:\1\1_Field\Multi_var_2\Big_data_result\L_600_150_hybrid_12_only_two_well_0000',
+    #           r'C:\1\1_Field\Multi_var_2\Big_data_result\L_500_125_stPAA_15_only_two_0000']
+    #path = r'C:\1\1_Field\Multi_var_2\23_MVR_copy\L_500_125_standart_15_only_two_0000'  ## #1
+    #path = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\L_600_175_hybrid_12_only_two_0000'  ## #2
+    #for path in trushko:
+    #    casename = r'%s\%s' % (path, path[path.rfind('\\')+1:-5])
+     #   df, df2 = binaryProcessing(casename, casename + ".rdata")
+      #  print(casename)
+        #with pd.ExcelWriter(r'C:\1\4_Scripts\Big_export_SPD\Trushko_3_vars\3_wells_binar_export.xlsx', mode='a', if_sheet_exists='replace') as writer:
+        #    df.to_excel(writer, sheet_name=path[path.rfind('\\')+1:-5])
+
+        #with pd.ExcelWriter(r'C:\Users\baronov.ym\Desktop\Add_after_copy_mvr_from_server\7_PPD\PPD2.xlsx') as writer2:  ##, mode='a', if_sheet_exists='replace'
+        #    df2.to_excel(writer2, sheet_name=path[path.rfind('\\')+1:-5])
+    path = r'C:\Users\baronov.ym\Desktop\Add_after_copy_mvr_from_server\7_PPD\7_PPD_recu_schedule_280_0000'
+    casename = r'%s\%s' % (path, path[path.rfind('\\') + 1:-5])
+    df, df2 = binaryProcessing(casename, casename + ".rdata")
+    with pd.ExcelWriter(r'C:\Users\baronov.ym\Desktop\Add_after_copy_mvr_from_server\7_PPD\PPD2.xlsx') as writer2:  ##, mode='a', if_sheet_exists='replace'
+        df2.to_excel(writer2, sheet_name=path[path.rfind('\\') + 1:-5])
+    with pd.ExcelWriter(r'C:\Users\baronov.ym\Desktop\Add_after_copy_mvr_from_server\7_PPD\PPD3.xlsx') as writer:
+        df.to_excel(writer, sheet_name=path[path.rfind('\\')+1:-5])
+#df3.to_excel(r'C:\1\4_Scripts\Big_export_SPD\Trushko_3_vars\3_wells.xlsx')
 
 
 

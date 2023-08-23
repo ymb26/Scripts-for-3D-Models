@@ -91,19 +91,38 @@ def get_tab_from_bin(casename):
 
 def binaryProcessing(casename):
     df, wells_list = get_tab_from_bin(casename)
-    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\Export_wells.xlsx') as writer:
-        for elem in sorted(wells_list):
-            print(df.xs(elem, level="wgname", axis=1, drop_level=False))
-            df.xs(elem, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=elem)
-    #df.to_excel(r'C:\1\4_Scripts\Test_econom\1.xlsx')
+    with pd.ExcelWriter(r'C:\Users\baronov.ym\Desktop\Add_after_copy_mvr_from_server\600_150.xlsx') as writer:    ##, mode='a', if_sheet_exists='replace'
+        ## chose if you want export all wells in sheets
+        #for elem in sorted(wells_list):
+            #print(df.xs(elem, level="wgname", axis=1, drop_level=False))
+            #df.xs(elem, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=elem)
 
+        ## chose all export or only well
+        df.to_excel(writer, sheet_name=casename[casename.rfind('\\') + 1:-5])
+        #df.xs(wells_list, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=casename[casename.rfind('\\') + 1:-5])
 
 if __name__ == "__main__":
-    casename = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\L_600_75_hybrid_12_0000\L_600_75_hybrid_12'
+    #trushko = [r'C:\1\1_Field\Multi_var_2\23_MVR_copy\L_500_125_standart_15_only_two_0000\L_500_125_standart_15_only_two',
+    #           r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\L_600_175_hybrid_12_only_two_0000\L_600_175_hybrid_12_only_two',
+    #           r'C:\1\1_Field\Multi_var_2\23_MVR_additional_cases\L_500_125_stPAA_15_only_two_0000\L_500_125_stPAA_15_only_two']
+    #trushko = [r'C:\1\1_Field\Multi_var_2\Big_data_result\L_500_125_standart_15_only_two_0000\L_500_125_standart_15_only_two',
+    #           r'C:\1\1_Field\Multi_var_2\Big_data_result\L_600_150_hybrid_12_only_two_well_0000\L_600_150_hybrid_12_only_two_well',
+    #           r'C:\1\1_Field\Multi_var_2\Big_data_result\L_500_125_stPAA_15_only_two_0000\L_500_125_stPAA_15_only_two']
+    #three_500 = [r'C:\1\1_Field\Multi_var_2\Big_data_result\500_3\L_500_75_hybrid_12_only_two_0000\L_500_75_hybrid_12_only_two',
+    #             r'C:\1\1_Field\Multi_var_2\Big_data_result\500_3\L_500_100_hybrid_12_only_two_0000\L_500_100_hybrid_12_only_two',
+    #             r'C:\1\1_Field\Multi_var_2\Big_data_result\500_3\L_500_125_hybrid_12_only_two_0000\L_500_125_hybrid_12_only_two']
+    #sand = [r'C:\1\1_Field\Multi_var_2\Big_data_result\Sand\L_500_125_standart_15_only_two_sand_0000\L_500_125_standart_15_only_two_sand',
+    #        r'C:\1\1_Field\Multi_var_2\Big_data_result\Sand\L_500_125_stPAA_15_only_two_sand_0000\L_500_125_stPAA_15_only_two_sand',
+    #        r'C:\1\1_Field\Multi_var_2\Big_data_result\Sand\L_600_150_hybrid_12_only_two_well_sand_0000\L_600_150_hybrid_12_only_two_well_sand']
+    #for casename in sand:
+    #    binaryProcessing(casename)
+
+
+    #casename = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\L_600_75_hybrid_12_0000\L_600_75_hybrid_12'
+    casename = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\L_600_150_hybrid_12_only_two_0000\L_600_150_hybrid_12_only_two'
+
+    #for casename in [r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\500_75_100_125\L_500_75_hybrid_12_only_two_0000\L_500_75_hybrid_12_only_two',
+    #                 r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\500_75_100_125\L_500_100_hybrid_12_only_two_0000\L_500_100_hybrid_12_only_two',
+    #                 r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\500_75_100_125\L_500_125_hybrid_12_only_two_0000\L_500_125_hybrid_12_only_two']:
     binaryProcessing(casename)
-
-
-
-    #df2.to_excel(writer, sheet_name=casename[casename.rfind("\\L_") + 1:])
-    #df_all.to_excel(r'C:\1\4_Scripts\Test_econom\additional_cases\econom.xlsx', index='1')
 
