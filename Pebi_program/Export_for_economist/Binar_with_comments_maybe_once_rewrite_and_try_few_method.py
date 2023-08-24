@@ -90,39 +90,30 @@ def get_tab_from_bin(casename):
     return df, wells_list
 
 def binaryProcessing(casename):
+    import datetime
+
     df, wells_list = get_tab_from_bin(casename)
-    with pd.ExcelWriter(r'C:\Users\baronov.ym\Desktop\Add_after_copy_mvr_from_server\600_150.xlsx') as writer:    ##, mode='a', if_sheet_exists='replace'
+    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\Kust_export\KP707_600_hybrid_150_quick.xlsx') as writer:    ##, mode='a', if_sheet_exists='replace'
         ## chose if you want export all wells in sheets
         #for elem in sorted(wells_list):
-            #print(df.xs(elem, level="wgname", axis=1, drop_level=False))
-            #df.xs(elem, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=elem)
+        #    print(df.xs(elem, level="wgname", axis=1, drop_level=False))
+        #    df.xs(elem, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=elem)
 
         ## chose all export or only well
         df.to_excel(writer, sheet_name=casename[casename.rfind('\\') + 1:-5])
-        #df.xs(wells_list, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=casename[casename.rfind('\\') + 1:-5])
+
+        wells_list.remove(b'FIELD')
+        wells_list.remove(b'1568G')
+        wells_list.remove(b'1575G')
+        wells_list.remove(b'G')
+        data_list = [datetime.date(2023, 1, 1), datetime.date(2024, 1, 1), datetime.date(2025, 1, 1), datetime.date(2026, 1, 1), datetime.date(2027, 1, 1), datetime.date(2028, 1, 1),
+                     datetime.date(2029, 1, 1), datetime.date(2030, 1, 1), datetime.date(2031, 1, 1), datetime.date(2032, 1, 1), datetime.date(2033, 1, 1)]
+        for elem in sorted(wells_list):
+            print(df.xs(elem, level="wgname", axis=1, drop_level=False)[[b'WOPT', b'WWPT']].loc[data_list])
+            #print(datetime.date(2030, 1, 1))
+
 
 if __name__ == "__main__":
-    #trushko = [r'C:\1\1_Field\Multi_var_2\23_MVR_copy\L_500_125_standart_15_only_two_0000\L_500_125_standart_15_only_two',
-    #           r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\L_600_175_hybrid_12_only_two_0000\L_600_175_hybrid_12_only_two',
-    #           r'C:\1\1_Field\Multi_var_2\23_MVR_additional_cases\L_500_125_stPAA_15_only_two_0000\L_500_125_stPAA_15_only_two']
-    #trushko = [r'C:\1\1_Field\Multi_var_2\Big_data_result\L_500_125_standart_15_only_two_0000\L_500_125_standart_15_only_two',
-    #           r'C:\1\1_Field\Multi_var_2\Big_data_result\L_600_150_hybrid_12_only_two_well_0000\L_600_150_hybrid_12_only_two_well',
-    #           r'C:\1\1_Field\Multi_var_2\Big_data_result\L_500_125_stPAA_15_only_two_0000\L_500_125_stPAA_15_only_two']
-    #three_500 = [r'C:\1\1_Field\Multi_var_2\Big_data_result\500_3\L_500_75_hybrid_12_only_two_0000\L_500_75_hybrid_12_only_two',
-    #             r'C:\1\1_Field\Multi_var_2\Big_data_result\500_3\L_500_100_hybrid_12_only_two_0000\L_500_100_hybrid_12_only_two',
-    #             r'C:\1\1_Field\Multi_var_2\Big_data_result\500_3\L_500_125_hybrid_12_only_two_0000\L_500_125_hybrid_12_only_two']
-    #sand = [r'C:\1\1_Field\Multi_var_2\Big_data_result\Sand\L_500_125_standart_15_only_two_sand_0000\L_500_125_standart_15_only_two_sand',
-    #        r'C:\1\1_Field\Multi_var_2\Big_data_result\Sand\L_500_125_stPAA_15_only_two_sand_0000\L_500_125_stPAA_15_only_two_sand',
-    #        r'C:\1\1_Field\Multi_var_2\Big_data_result\Sand\L_600_150_hybrid_12_only_two_well_sand_0000\L_600_150_hybrid_12_only_two_well_sand']
-    #for casename in sand:
-    #    binaryProcessing(casename)
-
-
-    #casename = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\L_600_75_hybrid_12_0000\L_600_75_hybrid_12'
-    casename = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\L_600_150_hybrid_12_only_two_0000\L_600_150_hybrid_12_only_two'
-
-    #for casename in [r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\500_75_100_125\L_500_75_hybrid_12_only_two_0000\L_500_75_hybrid_12_only_two',
-    #                 r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\500_75_100_125\L_500_100_hybrid_12_only_two_0000\L_500_100_hybrid_12_only_two',
-    #                 r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\500_75_100_125\L_500_125_hybrid_12_only_two_0000\L_500_125_hybrid_12_only_two']:
+    casename = r'C:\1\1_Field\Multi_var_2\25_26_MVR_600_300_m_kust_true\KP707_600_hybrid_150_quick_0000\KP707_600_hybrid_150_quick'
     binaryProcessing(casename)
 
