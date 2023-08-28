@@ -93,27 +93,74 @@ def binaryProcessing(casename):
     import datetime
 
     df, wells_list = get_tab_from_bin(casename)
-    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\Kust_export\KP707_600_hybrid_150_quick.xlsx') as writer:    ##, mode='a', if_sheet_exists='replace'
-        ## chose if you want export all wells in sheets
+    df_all = pd.DataFrame()
+    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\Kust_export\SPD\v2\KP707_300_standart_75_quick_spd_v2.xlsx') as writer:    ##, mode='a', if_sheet_exists='replace'
+        ### chose if you want export all wells in sheets
         #for elem in sorted(wells_list):
         #    print(df.xs(elem, level="wgname", axis=1, drop_level=False))
-        #    df.xs(elem, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=elem)
+            #df.xs(elem, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=elem)
 
-        ## chose all export or only well
-        df.to_excel(writer, sheet_name=casename[casename.rfind('\\') + 1:-5])
+        ### chose all export or only well
+        #df.to_excel(writer, sheet_name=casename[casename.rfind('\\') + 1:-5])
+
 
         wells_list.remove(b'FIELD')
         wells_list.remove(b'1568G')
         wells_list.remove(b'1575G')
         wells_list.remove(b'G')
         data_list = [datetime.date(2023, 1, 1), datetime.date(2024, 1, 1), datetime.date(2025, 1, 1), datetime.date(2026, 1, 1), datetime.date(2027, 1, 1), datetime.date(2028, 1, 1),
-                     datetime.date(2029, 1, 1), datetime.date(2030, 1, 1), datetime.date(2031, 1, 1), datetime.date(2032, 1, 1), datetime.date(2033, 1, 1)]
+                     datetime.date(2029, 1, 1), datetime.date(2030, 1, 1), datetime.date(2031, 1, 1), datetime.date(2032, 1, 1), datetime.date(2033, 1, 1), datetime.date(2034, 1, 1)]
         for elem in sorted(wells_list):
-            print(df.xs(elem, level="wgname", axis=1, drop_level=False)[[b'WOPT', b'WWPT']].loc[data_list])
-            #print(datetime.date(2030, 1, 1))
+            #print(df.xs(elem, level="wgname", axis=1, drop_level=False)[[b'WOPT', b'WWPT']].loc[data_list])
+            
+            for idx, row in df.xs(elem, level="wgname", axis=1, drop_level=False).iterrows():
+                if row[b'WOPT'][0] != 0:
+                    #print(key)
+                    break
+                else:
+                    key = idx
+            df2 = df.xs(elem, level="wgname", axis=1, drop_level=False)[[b'WOPT', b'WWPT', b'WGPT']].loc[data_list]
+            df2[b'WLPT'] = df2[b'WOPT'] + df2[b'WWPT']
+            wip_days = []
+            for idx, row in df2.iterrows():
 
+                if idx - key < timedelta(days=0):
+                    #print(idx - key)
+                    wip_days.append(timedelta(days=0))
+                elif idx - key < timedelta(days=365):
+                    wip_days.append(idx - key)
+                else:
+                    wip_days.append(idx - last_idx)
+                last_idx = idx
+
+            #df2 = df2.drop(columns=b'WOPT', level=1)
+            df2.columns = df2.columns.droplevel(level=1)
+            df2.columns = df2.columns.droplevel(level=1)
+            df2.columns = df2.columns.droplevel(level=1)
+            #print(df2)
+            df2['Days'] = np.array(wip_days)
+            df2['Step'] = df2['Days'].dt.days.astype('int32')
+            df2 = df2.fillna(0)
+            #print(df2['Step'])
+            #print(df2[b'WOPT'] / df2[b'WWPT'] / int(365))
+            df3 = df2[[b'WOPT', b'WWPT', b'WLPT', b'WGPT']].diff()
+            df3[b'WOPT'] = df3[b'WOPT'] / df2['Step']
+            df3[b'WWPT'] = df3[b'WWPT'] / df2['Step']
+            df3[b'WLPT'] = df3[b'WLPT'] / df2['Step']
+            df3[b'WGPT'] = df3[b'WGPT'] / df2['Step'] / 1000
+            df3['Work Days'] = df2['Step']
+            df3 = df3.fillna(0)
+            df3 = df3.T
+            for i in range(10):
+                df3 = df3._append(pd.Series([np.nan], name=""))
+            #df_all = pd.concat([df_all, [np.nan]], axis=0)
+            df3 = pd.concat([df3], keys=[elem, elem], names=['Well'])
+
+            df_all = pd.concat([df_all, df3], axis=0)
+            print(df_all)
+        df_all.to_excel(writer)
 
 if __name__ == "__main__":
-    casename = r'C:\1\1_Field\Multi_var_2\25_26_MVR_600_300_m_kust_true\KP707_600_hybrid_150_quick_0000\KP707_600_hybrid_150_quick'
+    casename = r'C:\1\1_Field\Multi_var_2\25_26_MVR_600_300_m_kust_true\v2\KP707_300_standart_75_correct_0001\KP707_300_standart_75_correct'
     binaryProcessing(casename)
 

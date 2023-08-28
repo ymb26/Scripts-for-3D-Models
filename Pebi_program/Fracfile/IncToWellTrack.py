@@ -42,8 +42,8 @@ def makeWellTrack(path_in, path_out):
 
 
 def findAllFiles():
-    path_in = r'C:\1\1_Field\Multi_var_2\26_MVR_300_m_kust\WELLTRACKS\300_M_welltrack_kust'
-    path_out = r'C:\1\1_Field\Multi_var_2\26_MVR_300_m_kust\WELLTRACKS\300_M_welltrack_kust'
+    path_in = r'C:\1\1_Field\Multi_var_2\27_MVR_500_m_kust\WELLTRACKS\500_M_kust'
+    path_out = r'C:\1\1_Field\Multi_var_2\27_MVR_500_m_kust\WELLTRACKS\500_M_kust'
     count = 1
     for root, dirs, files in os.walk(path_in):
         for file in files:
