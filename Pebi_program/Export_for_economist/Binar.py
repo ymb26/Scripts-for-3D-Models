@@ -158,6 +158,7 @@ def binaryProcessing(df_all, casename, rdata_path, count):
     #df3 = df2['WOPT']['Well 2']
     df3 = pd.DataFrame()
     df3.insert(0, 'Total gas', df2['WGPT']['Well 2'])
+    df3.insert(0, 'Total gas', df2['WGPT']['Well 2'])
     df3.insert(0, 'Total water', df2['WWPT']['Well 2'])
     df3.insert(0, 'Total oil', df2['WOPT']['Well 2'])
     df3.insert(0, 'Date', df2['Date'])
@@ -173,10 +174,10 @@ def binaryProcessing(df_all, casename, rdata_path, count):
     output_df.columns = ['Total oil', 'Total water', 'Total gas', 'Date']
     output_df.loc[0, 'Date'] = begin_date
     output_df['Step'] = output_df['Date'].diff()
-    output_df['Diff oil'] = output_df['Total oil'].diff() / output_df['Step'].dt.days
-    output_df['Diff water'] = output_df['Total water'].diff() / output_df['Step'].dt.days
+    output_df['Diff oil'] = output_df['Total oil'].diff() / 365.25  ##output_df['Step'].dt.days
+    output_df['Diff water'] = output_df['Total water'].diff() / 365.25  ##output_df['Step'].dt.days
     output_df['Diff liquid'] = output_df['Diff water'] + output_df['Diff oil']
-    output_df['Diff gas'] = output_df['Total gas'].diff() / output_df['Step'].dt.days
+    output_df['Diff gas'] = output_df['Total gas'].diff() / 365.25 / 1000 ## output_df['Step'].dt.days
     for i in range(43):
         output_df.loc[len(output_df.index)] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     output_df = output_df.fillna(0)
@@ -209,11 +210,11 @@ def binaryProcessing(df_all, casename, rdata_path, count):
 
 if __name__ == "__main__":
     df_all = pd.DataFrame()
-    path_folder_mvr = r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\500_75_100_125'
+    path_folder_mvr = r'Z:\Baronov\Trushko_MVR\600'
     #path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case'
     count = 1
-    with pd.ExcelWriter(r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\500_75_100_125\Export_Pebi.xlsx', engine="openpyxl") as writer:
-        with pd.ExcelWriter(r'\\10.10.1.79\pgsmb\12. Exchange\Yuri_Baronov\500_75_100_125\Intermediate_version.xlsx', engine="openpyxl") as writer2:
+    with pd.ExcelWriter(r'Z:\Baronov\Trushko_MVR\Export_Pebi.xlsx', engine="openpyxl") as writer:
+        with pd.ExcelWriter(r'Z:\Baronov\Trushko_MVR\Intermediate_version.xlsx', engine="openpyxl") as writer2:
             for root, dirs, files in os.walk(path_folder_mvr):
                 feature_of_name = "L_"  ## change on what you search
                 if feature_of_name in root:
@@ -223,5 +224,5 @@ if __name__ == "__main__":
                     df2.to_excel(writer, sheet_name=casename[casename.rfind("\\")+1:])
                     output_df.to_excel(writer2, sheet_name=casename[casename.rfind("\\") + 1:])
                     count += 1
-                #df_all.to_excel(r'C:\1\4_Scripts\Test_econom\PPD\econom.xlsx', index='1')
+                df_all.to_excel(r'Z:\Baronov\Trushko_MVR\econom.xlsx', index='1')
 

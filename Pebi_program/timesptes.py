@@ -61,4 +61,4 @@ for keys in dict:
     pressure =
     for i in range(0, 4):
         print(keys, datetime.strptime(dict[keys], "%d.%m.%Y") + relativedelta(months=i, day=datetime.strptime(dict[keys], "%d.%m.%Y").day))
-        pressure -=
+        #pressure -=

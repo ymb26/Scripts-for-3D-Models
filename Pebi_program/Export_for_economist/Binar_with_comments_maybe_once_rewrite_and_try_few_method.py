@@ -89,21 +89,28 @@ def get_tab_from_bin(casename):
 
     return df, wells_list
 
-def binaryProcessing(casename):
+def binaryProcessing(casename, output_path):
     import datetime
 
     df, wells_list = get_tab_from_bin(casename)
     df_all = pd.DataFrame()
-    with pd.ExcelWriter(r'C:\1\4_Scripts\Test_econom\Kust_export\SPD\v2\KP707_300_standart_75_quick_spd_v2.xlsx') as writer:    ##, mode='a', if_sheet_exists='replace'
+
+    print(wells_list)
+
+    with pd.ExcelWriter(output_path) as writer:    ##, mode='a', if_sheet_exists='replace'
+        #list of vector
+        #list_of_vectors = [b'WOPR']
+        #wells_list.remove(b'FIELD')
+        #wells_list.remove(b'G')
         ### chose if you want export all wells in sheets
-        #for elem in sorted(wells_list):
-        #    print(df.xs(elem, level="wgname", axis=1, drop_level=False))
-            #df.xs(elem, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=elem)
-
-        ### chose all export or only well
-        #df.to_excel(writer, sheet_name=casename[casename.rfind('\\') + 1:-5])
-
-
+        '''
+        for elem in sorted(wells_list):
+            try:
+                df.xs(elem, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=elem)
+            except:
+                print(elem)
+        '''
+        #'''
         wells_list.remove(b'FIELD')
         wells_list.remove(b'1568G')
         wells_list.remove(b'1575G')
@@ -144,14 +151,14 @@ def binaryProcessing(casename):
             #print(df2['Step'])
             #print(df2[b'WOPT'] / df2[b'WWPT'] / int(365))
             df3 = df2[[b'WOPT', b'WWPT', b'WLPT', b'WGPT']].diff()
-            df3[b'WOPT'] = df3[b'WOPT'] / df2['Step']
-            df3[b'WWPT'] = df3[b'WWPT'] / df2['Step']
-            df3[b'WLPT'] = df3[b'WLPT'] / df2['Step']
-            df3[b'WGPT'] = df3[b'WGPT'] / df2['Step'] / 1000
-            df3['Work Days'] = df2['Step']
+            df3[b'WOPT'] = df3[b'WOPT'] / 365.25        #df2['Step']
+            df3[b'WWPT'] = df3[b'WWPT'] / 365.25        #df2['Step']
+            df3[b'WLPT'] = df3[b'WLPT'] / 365.25        #df2['Step']
+            df3[b'WGPT'] = df3[b'WGPT'] / 365.25 / 1000 #df2['Step'] / 1000
+            #df3['Work Days'] = df2['Step']
             df3 = df3.fillna(0)
             df3 = df3.T
-            for i in range(10):
+            for i in range(11):
                 df3 = df3._append(pd.Series([np.nan], name=""))
             #df_all = pd.concat([df_all, [np.nan]], axis=0)
             df3 = pd.concat([df3], keys=[elem, elem], names=['Well'])
@@ -159,8 +166,15 @@ def binaryProcessing(casename):
             df_all = pd.concat([df_all, df3], axis=0)
             print(df_all)
         df_all.to_excel(writer)
+        #'''
 
 if __name__ == "__main__":
-    casename = r'C:\1\1_Field\Multi_var_2\25_26_MVR_600_300_m_kust_true\v2\KP707_300_standart_75_correct_0001\KP707_300_standart_75_correct'
-    binaryProcessing(casename)
+    #output_path = r'Y:\Baronov\L_700_150_hybrid_12_pebi2.xlsx'
+    #casename = r'Y:\Baronov\MVR_true_frac\MVR_base\L_700_150_hybrid_12_0000\L_700_150_hybrid_12'
+
+    output_path = r'C:\1\KP707_700_6_wells_false_spd.xlsx'
+    #casename = r'Y:\Baronov\Base_without_frac\ADAPT_31_v3_for_prognoz_v1_0000\ADAPT_31_v3_for_prognoz_v1'
+    casename = r'Y:\Baronov\30_MVR_kust_6_wells\KP707_700_6_wells_false_0002\KP707_700_6_wells_false'
+
+binaryProcessing(casename, output_path)
 

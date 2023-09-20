@@ -215,12 +215,12 @@ if __name__ == "__main__":
 
         #with pd.ExcelWriter(r'C:\Users\baronov.ym\Desktop\Add_after_copy_mvr_from_server\7_PPD\PPD2.xlsx') as writer2:  ##, mode='a', if_sheet_exists='replace'
         #    df2.to_excel(writer2, sheet_name=path[path.rfind('\\')+1:-5])
-    path = r'C:\Users\baronov.ym\Desktop\Add_after_copy_mvr_from_server\7_PPD\7_PPD_recu_schedule_280_0000'
+    path = r'Z:\Baronov\Trushko_MVR\600\L_600_150_hybrid_12_without_degr_0000'
     casename = r'%s\%s' % (path, path[path.rfind('\\') + 1:-5])
     df, df2 = binaryProcessing(casename, casename + ".rdata")
-    with pd.ExcelWriter(r'C:\Users\baronov.ym\Desktop\Add_after_copy_mvr_from_server\7_PPD\PPD2.xlsx') as writer2:  ##, mode='a', if_sheet_exists='replace'
+    with pd.ExcelWriter(r'Z:\Baronov\Trushko_MVR\L_600_150_hybrid_12_without_degr.xlsx') as writer2:  ##, mode='a', if_sheet_exists='replace'
         df2.to_excel(writer2, sheet_name=path[path.rfind('\\') + 1:-5])
-    with pd.ExcelWriter(r'C:\Users\baronov.ym\Desktop\Add_after_copy_mvr_from_server\7_PPD\PPD3.xlsx') as writer:
+    with pd.ExcelWriter(r'Z:\Baronov\Trushko_MVR\L_600_150_hybrid_12_without_degr_binar.xlsx') as writer:
         df.to_excel(writer, sheet_name=path[path.rfind('\\')+1:-5])
 #df3.to_excel(r'C:\1\4_Scripts\Big_export_SPD\Trushko_3_vars\3_wells.xlsx')
 
