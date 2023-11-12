@@ -1,7 +1,7 @@
 import os
 
-for root, dirs, files in os.walk(os.getcwd()):
-    if ".txt" in root:
-        print(os.path.join(root))
-    file = open('test1.txt', 'w')
-    file.close()
+for root, dirs, files in os.walk(r'Y:\Baronov\Priob_U_622_MVR_comb'):
+    for file in files:
+        if ".data" in file:
+            print(root + "\\" + file)
+

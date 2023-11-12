@@ -96,7 +96,7 @@ def binaryProcessing(df_all, casename, rdata_path, count):
     wells_array_str = list()  ##well list - byte to str
     for well in wells_array:
         wells_array_str.append(well.decode('utf-8'))
-    list_of_params = [b'WOPT', b'WWPT', b'WGPT', b'WIT', b'WOPR', b'WWPR', b'WGPR', b'WWCT', b'WBHP']
+    list_of_params = [b'WOPT', b'WWPT', b'WGPT', b'WOPR', b'WWPR', b'WGPR', b'WWCT', b'WBHP']
 
 
     arrays = [[], []]
@@ -210,19 +210,19 @@ def binaryProcessing(df_all, casename, rdata_path, count):
 
 if __name__ == "__main__":
     df_all = pd.DataFrame()
-    path_folder_mvr = r'Z:\Baronov\Trushko_MVR\600'
+    path_folder_mvr = r'Y:\Baronov\PRIOBKA_PPD'
     #path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case'
     count = 1
-    with pd.ExcelWriter(r'Z:\Baronov\Trushko_MVR\Export_Pebi.xlsx', engine="openpyxl") as writer:
-        with pd.ExcelWriter(r'Z:\Baronov\Trushko_MVR\Intermediate_version.xlsx', engine="openpyxl") as writer2:
+    with pd.ExcelWriter(r'Y:\Baronov\PRIOBKA_PPD\Export_Pebi.xlsx', engine="openpyxl") as writer:
+        with pd.ExcelWriter(r'Y:\Baronov\PRIOBKA_PPD\Intermediate_version.xlsx', engine="openpyxl") as writer2:
             for root, dirs, files in os.walk(path_folder_mvr):
-                feature_of_name = "L_"  ## change on what you search
+                feature_of_name = "216k_New_FracAch1_50bar"  ## change on what you search
                 if feature_of_name in root:
                     casename = os.path.join(root) + "\\" + os.path.join(root)[os.path.join(root).rfind("\\"):-5]    ## rfind('\\')
                     print(casename)
                     df_all, df2, output_df = binaryProcessing(df_all, casename, casename + ".rdata", count)
-                    df2.to_excel(writer, sheet_name=casename[casename.rfind("\\")+1:])
-                    output_df.to_excel(writer2, sheet_name=casename[casename.rfind("\\") + 1:])
+                    df2.to_excel(writer, sheet_name=casename[casename.rfind("\\")+10:])
+                    #output_df.to_excel(writer2, sheet_name=casename[casename.rfind("\\") + 1:])
                     count += 1
-                df_all.to_excel(r'Z:\Baronov\Trushko_MVR\econom.xlsx', index='1')
+                #df_all.to_excel(r'Z:\Baronov\Trushko_MVR\econom.xlsx', index='1')
 

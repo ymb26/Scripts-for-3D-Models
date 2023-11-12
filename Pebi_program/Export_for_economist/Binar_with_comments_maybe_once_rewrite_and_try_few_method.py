@@ -4,6 +4,7 @@ import os
 import numpy as np
 import pandas as pd
 import openpyxl
+
 from openpyxl.chart import Reference, BarChart, LineChart
 import io
 from datetime import datetime
@@ -12,17 +13,6 @@ from dateutil.relativedelta import relativedelta
 
 from pylab import plt
 import matplotlib.colors as colors
-
-'''
-filename = r'C:\\1\\1_Field\\Р10-90_Oil_case\\Р75\\Data_P75_gmm50_0005\\Data_P75_gmm50.UNSMRY
-
-with open(filename, 'rb') as file:
-        for line in file:
-            print(line)
-            break
-
-'''
-
 
 # tested on python 2.7.10, matplotlib 1.4.3, numpy 1.10.1, pandas 0.17.0
 # and python 3.5.0, matplotlib 1.4.3, numpy 1.10.1, pandas 0.17.0
@@ -95,28 +85,38 @@ def binaryProcessing(casename, output_path):
     df, wells_list = get_tab_from_bin(casename)
     df_all = pd.DataFrame()
 
-    print(wells_list)
+    #print(wells_list)
+    #wells_array = [b'1', b'2', b'3', b'4']  ##well list
 
-    with pd.ExcelWriter(output_path) as writer:    ##, mode='a', if_sheet_exists='replace'
+    #wells_array = [b'6371G', b'6372G', b'6373G', b'6374G', b'6375G', b'6365G', b'6363G', b'6362G', b'6360G']
+    #wells_array = [b'6363G']
+    wells_array = [b'1313G']
+    wells_array2 = list()
+    for well in wells_list:
+        if well not in wells_array:
+            wells_array2.append(well)
+    #return df
+    return df.drop(columns=wells_array2, level=1)
+
+    #with pd.ExcelWriter(output_path) as writer:    ##, mode='a', if_sheet_exists='replace'
         #list of vector
         #list_of_vectors = [b'WOPR']
         #wells_list.remove(b'FIELD')
         #wells_list.remove(b'G')
         ### chose if you want export all wells in sheets
-        '''
+    '''
         for elem in sorted(wells_list):
             try:
                 df.xs(elem, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=elem)
             except:
                 print(elem)
-        '''
-        #'''
+
         wells_list.remove(b'FIELD')
         wells_list.remove(b'1568G')
         wells_list.remove(b'1575G')
         wells_list.remove(b'G')
         data_list = [datetime.date(2023, 1, 1), datetime.date(2024, 1, 1), datetime.date(2025, 1, 1), datetime.date(2026, 1, 1), datetime.date(2027, 1, 1), datetime.date(2028, 1, 1),
-                     datetime.date(2029, 1, 1), datetime.date(2030, 1, 1), datetime.date(2031, 1, 1), datetime.date(2032, 1, 1), datetime.date(2033, 1, 1), datetime.date(2034, 1, 1)]
+                     datetime.date(2029, 1, 1), datetime.date(2030, 1, 1), datetime.date(2031, 1, 1), datetime.date(2032, 1, 1), datetime.date(2033, 1, 1)]#, datetime.date(2034, 1, 1)]
         for elem in sorted(wells_list):
             #print(df.xs(elem, level="wgname", axis=1, drop_level=False)[[b'WOPT', b'WWPT']].loc[data_list])
             
@@ -166,15 +166,47 @@ def binaryProcessing(casename, output_path):
             df_all = pd.concat([df_all, df3], axis=0)
             print(df_all)
         df_all.to_excel(writer)
-        #'''
+    '''
 
 if __name__ == "__main__":
-    #output_path = r'Y:\Baronov\L_700_150_hybrid_12_pebi2.xlsx'
-    #casename = r'Y:\Baronov\MVR_true_frac\MVR_base\L_700_150_hybrid_12_0000\L_700_150_hybrid_12'
+    #output_path = r'C:\1\1_Field\Test from Sasha SPB\pebi.xlsx'
+    #casename = r'C:\1\1_Field\Test from Sasha SPB\e4_min_opt_14\result'
+    #df = binaryProcessing(casename, output_path)
 
-    output_path = r'C:\1\KP707_700_6_wells_false_spd.xlsx'
-    #casename = r'Y:\Baronov\Base_without_frac\ADAPT_31_v3_for_prognoz_v1_0000\ADAPT_31_v3_for_prognoz_v1'
-    casename = r'Y:\Baronov\30_MVR_kust_6_wells\KP707_700_6_wells_false_0002\KP707_700_6_wells_false'
+    #folder_path = r'Y:\Baronov\Priob_U_622_big_matrix'
 
-binaryProcessing(casename, output_path)
+    #'''
+    #output_path = r'Y:\Baronov\Priob_U_622\first'
 
+
+
+    #'''
+    count = 1
+    count_file = 1
+    folder_path = r'Y:\MVR_ORENBURG\1_iter'
+    with pd.ExcelWriter(r'Y:\MVR_ORENBURG\2_iter\1313_fact.xlsx') as writer:
+        for root, dirs, files in os.walk(folder_path):
+            feature_of_name = "4_sector"
+            #feature_of_name2 = "frac02"
+            if feature_of_name in root:
+                #casename = root[root.rfind("\\") + 1:root.rfind("_")]
+                casename = os.path.join(root) + "\\" + os.path.join(root)[os.path.join(root).rfind("\\"):-5]  ## rfind('\\')
+                #print(count, casename)
+                df2 = binaryProcessing(casename, "xxx")
+                #df2.to_excel(writer, sheet_name=casename[casename.rfind("\\")+1:])
+                df2.to_excel(writer, sheet_name="D" + casename[casename.rfind("4_sector_frac")+13:])
+                #df2.to_excel(writer, sheet_name="D" + casename[casename.rfind("k05_")+5:])
+                #df2.to_excel(writer, sheet_name=str(count))
+                print(casename)
+                #df2.to_excel(writer, sheet_name="D" + casename[casename.rfind("1_sector_frac") + 13:casename.rfind("1_sector_frac") + 15] + casename[casename.rfind("_rate"):])
+
+                #print(casename[casename.rfind("\\")+1:])
+                count += 1
+
+    #'''
+
+            #df2 = binaryProcessing(casename, "xxx")
+            #rint(casename[casename.rfind("\\") + 20:])
+            ##df2.to_excel(writer, sheet_name=casename[casename.rfind("\\") + 1:])
+            #df2.to_excel(writer, sheet_name=casename[:10])
+    #'''

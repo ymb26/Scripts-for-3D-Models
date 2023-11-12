@@ -81,8 +81,8 @@ def readInFile(path_infile, path_outfile, type_design, value, folder_of_length, 
 def findAllFiles():
     #path_in = r'C:\1\2_Work_files\SPD\MVR\ForGDM'
     #path_out = r'C:\1\2_Work_files\SPD\MVR\Fracfiles\Test_multi_out'
-    path_in = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\WELLTRACKS\600_M_welltrack'            ####
-    path_out = r'C:\1\1_Field\Multi_var_2\24_MVR_600_m\Fracfiles'            ####
+    path_in = r'C:\1\1_Field\Orenburg_test_MVR_5portov\WELLTRACK'            ####
+    path_out = r'C:\1\1_Field\Orenburg_test_MVR_5portov\Fracfiles'            ####
 
     #list_of_file = open(r'C:\1\1_Field\Multi_var_2\23_MVR_additional_cases\list_of_data.txt', 'w')    ####
     #list_of_file.close()

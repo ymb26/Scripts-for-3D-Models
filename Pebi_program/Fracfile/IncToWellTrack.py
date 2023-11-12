@@ -9,6 +9,7 @@ def makeWellTrack(path_in, path_out):
     #path_out = r'C:\1\2_Work_files\SPD\MVR\ForGDM\WellTrac_300_m_12_stad.txt'
 
     file_out = open(path_out, 'w')
+    #df = pd.read_excel(path_in, header=None, sheet_name="3st_J2-3")
     df = pd.read_excel(path_in, header=None)
 
     for row in df.itertuples(index=False):
@@ -42,8 +43,8 @@ def makeWellTrack(path_in, path_out):
 
 
 def findAllFiles():
-    path_in = r'Y:\Baronov\31_MVR_kust'
-    path_out = r'Y:\Baronov\31_MVR_kust\WELLTRACKS'
+    path_in = r'Y:\MVR_ORENBURG\2_iter\new_arrangement_new_pressure'
+    path_out = r'Y:\MVR_ORENBURG\2_iter\new_arrangement_new_pressure'
     count = 1
     for root, dirs, files in os.walk(path_in):
         for file in files:

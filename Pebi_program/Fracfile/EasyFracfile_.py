@@ -1,5 +1,7 @@
-path_infile = r'Y:\Baronov\31_MVR_kust\WELLTRACKS\WELLTRACK_300_kust_new_base.txt'
-path_outfile = r'Y:\Baronov\31_MVR_kust\Fracfiles\Fracfile_300_kust_new_base.txt'
+import os
+
+path_infile = r'Y:\MVR_ORENBURG\2_iter\new_arrangement_new_pressure\9_portov\WELLTRACK\WELLTRACK_9.txt'
+path_outfile = r'Y:\MVR_ORENBURG\2_iter\new_arrangement_new_pressure\9_portov\\FRACFILES\Fracfile_9.txt'
 
 def writeFractuleFile(MD, number_well, path_outfile):
     out_file = open(path_outfile, 'a')
@@ -8,13 +10,14 @@ def writeFractuleFile(MD, number_well, path_outfile):
         if MD[i] == 0:
             out_file.write("\n")
             break
-        out_file.write(str(number_well) + "_stage_" + str(i + 1) + '\t1\t' + "JUN\t2023\tMD\t")
+        out_file.write(str(number_well) + "_stage_" + str(i + 1) + '\t1\t' + "JAN\t2024\tMD\t")
         if i == 0:
             out_file.write(str(round(MD[i], 1) - 0.5) + '\t' + str(round(MD[i], 1)))
         else:
             out_file.write(str(round(MD[i], 1)) + '\t' + str(round(MD[i], 1) + 0.5))
 
-        out_file.write("\t\'%s.txt\'\t/\n" % number_well)
+        ###name of file in end of string
+        out_file.write("\t\'%s.txt\'\t/\n" % "xxx")#number_well)
         i += 1
 
 
@@ -45,3 +48,10 @@ def readInFile(path_infile, path_outfile):
     out_file.write("/\n")
 
 readInFile(path_infile, path_outfile)
+
+'''
+for root, dirs, files in os.walk(r'Y:\Baronov\Priob_U_622_MVR\WELLTRACK'):
+    for file in files:
+        print(file[file.find("_") + 1:-4])
+        readInFile(r'Y:\Baronov\Priob_U_622_MVR\WELLTRACK' + "\\" + file, r'Y:\Baronov\Priob_U_622_MVR\Fracfiles' + "\\Fracfile_" + file[file.find("_") + 1:])
+'''
