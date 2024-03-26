@@ -84,19 +84,25 @@ def binaryProcessing(casename, output_path):
 
     df, wells_list = get_tab_from_bin(casename)
     df_all = pd.DataFrame()
-
     #print(wells_list)
     #wells_array = [b'1', b'2', b'3', b'4']  ##well list
 
     #wells_array = [b'6371G', b'6372G', b'6373G', b'6374G', b'6375G', b'6365G', b'6363G', b'6362G', b'6360G']
     #wells_array = [b'6363G']
-    wells_array = [b'1313G']
+    #wells_array = [b'1313G']
+    wells_array = [b'1', b'2', b'3', b'4']
+    wells_list.remove(b'FIELD')
+    wells_list.remove(b'1568G')
+    wells_list.remove(b'1575G')
+    wells_list.remove(b'G')
     wells_array2 = list()
+    print(wells_list)
     for well in wells_list:
         if well not in wells_array:
             wells_array2.append(well)
+    print(wells_array2)
     #return df
-    return df.drop(columns=wells_array2, level=1)
+    return df.drop(columns=wells_list, level=1)
 
     #with pd.ExcelWriter(output_path) as writer:    ##, mode='a', if_sheet_exists='replace'
         #list of vector
@@ -110,7 +116,7 @@ def binaryProcessing(casename, output_path):
                 df.xs(elem, level="wgname", axis=1, drop_level=False).to_excel(writer, sheet_name=elem)
             except:
                 print(elem)
-
+        
         wells_list.remove(b'FIELD')
         wells_list.remove(b'1568G')
         wells_list.remove(b'1575G')
@@ -119,7 +125,7 @@ def binaryProcessing(casename, output_path):
                      datetime.date(2029, 1, 1), datetime.date(2030, 1, 1), datetime.date(2031, 1, 1), datetime.date(2032, 1, 1), datetime.date(2033, 1, 1)]#, datetime.date(2034, 1, 1)]
         for elem in sorted(wells_list):
             #print(df.xs(elem, level="wgname", axis=1, drop_level=False)[[b'WOPT', b'WWPT']].loc[data_list])
-            
+        
             for idx, row in df.xs(elem, level="wgname", axis=1, drop_level=False).iterrows():
                 if row[b'WOPT'][0] != 0:
                     #print(key)
@@ -130,7 +136,7 @@ def binaryProcessing(casename, output_path):
             df2[b'WLPT'] = df2[b'WOPT'] + df2[b'WWPT']
             wip_days = []
             for idx, row in df2.iterrows():
-
+        
                 if idx - key < timedelta(days=0):
                     #print(idx - key)
                     wip_days.append(timedelta(days=0))
@@ -139,7 +145,7 @@ def binaryProcessing(casename, output_path):
                 else:
                     wip_days.append(idx - last_idx)
                 last_idx = idx
-
+        
             #df2 = df2.drop(columns=b'WOPT', level=1)
             df2.columns = df2.columns.droplevel(level=1)
             df2.columns = df2.columns.droplevel(level=1)
@@ -162,51 +168,42 @@ def binaryProcessing(casename, output_path):
                 df3 = df3._append(pd.Series([np.nan], name=""))
             #df_all = pd.concat([df_all, [np.nan]], axis=0)
             df3 = pd.concat([df3], keys=[elem, elem], names=['Well'])
-
+        
             df_all = pd.concat([df_all, df3], axis=0)
+            #print(df_all)
+            df_all.to_excel(writer)
             print(df_all)
-        df_all.to_excel(writer)
     '''
 
 if __name__ == "__main__":
-    #output_path = r'C:\1\1_Field\Test from Sasha SPB\pebi.xlsx'
-    #casename = r'C:\1\1_Field\Test from Sasha SPB\e4_min_opt_14\result'
-    #df = binaryProcessing(casename, output_path)
+    output_path = r'C:\1\1_Field\SPD_PPD\Pebi_PPD.xlsx'
+    casename = r'Z:\Baronov\SPD_PPD_4_wells\250\8_PPD_recu_schedule_280_4_wells_0000\8_PPD_recu_schedule_280_4_wells'
 
-    #folder_path = r'Y:\Baronov\Priob_U_622_big_matrix'
-
-    #'''
-    #output_path = r'Y:\Baronov\Priob_U_622\first'
-
+    df2 = binaryProcessing(casename, "xxx")
+    #print(casename[casename.rfind("\\") + 20:])
+    df2.to_excel(output_path, sheet_name=casename[casename.rfind("\\") + 1:])
+    #df2.to_excel(writer, sheet_name=casename[:10])
 
 
-    #'''
+
+    '''
     count = 1
     count_file = 1
-    folder_path = r'Y:\MVR_ORENBURG\1_iter'
-    with pd.ExcelWriter(r'Y:\MVR_ORENBURG\2_iter\1313_fact.xlsx') as writer:
+    folder_path = r'Z:\Baronov\SPD_PPD_4_wells\250'
+    with pd.ExcelWriter(r'C:\1\1_Field\SPD_PPD\Pebi_ppd.xlsx') as writer:
         for root, dirs, files in os.walk(folder_path):
-            feature_of_name = "4_sector"
+            feature_of_name = "8_PPD_recu_schedule_280_4_wells_0000"
             #feature_of_name2 = "frac02"
             if feature_of_name in root:
-                #casename = root[root.rfind("\\") + 1:root.rfind("_")]
                 casename = os.path.join(root) + "\\" + os.path.join(root)[os.path.join(root).rfind("\\"):-5]  ## rfind('\\')
-                #print(count, casename)
-                df2 = binaryProcessing(casename, "xxx")
-                #df2.to_excel(writer, sheet_name=casename[casename.rfind("\\")+1:])
-                df2.to_excel(writer, sheet_name="D" + casename[casename.rfind("4_sector_frac")+13:])
-                #df2.to_excel(writer, sheet_name="D" + casename[casename.rfind("k05_")+5:])
-                #df2.to_excel(writer, sheet_name=str(count))
                 print(casename)
-                #df2.to_excel(writer, sheet_name="D" + casename[casename.rfind("1_sector_frac") + 13:casename.rfind("1_sector_frac") + 15] + casename[casename.rfind("_rate"):])
+                df2 = binaryProcessing(casename, "xxx")
+                print(df2)
+                break
 
                 #print(casename[casename.rfind("\\")+1:])
                 count += 1
 
-    #'''
+    '''
 
-            #df2 = binaryProcessing(casename, "xxx")
-            #rint(casename[casename.rfind("\\") + 20:])
-            ##df2.to_excel(writer, sheet_name=casename[casename.rfind("\\") + 1:])
-            #df2.to_excel(writer, sheet_name=casename[:10])
-    #'''
+

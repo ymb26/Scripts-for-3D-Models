@@ -23,10 +23,11 @@ df.to_csv(r'C:\1\1_Field\PRIOBKA\100\new_recu_sort.INC', sep='\t', columns=['WEL
 print(df)
 '''
 
-path = r'C:\1\4_Scripts\20230803_RECU_FORECAST_NOPPD_NEW50_new_data_sort_Y.INC'
-df = pd.read_csv(path, delimiter='\t', header=0)
-df['new_date'] = pd.to_datetime(df['\'DD.MM.YYYY\''], format='%d.%m.%Y')
-df = df.sort_values(by='new_date', ascending=True)
+#path = r'C:\1\4_Scripts\20230803_RECU_FORECAST_NOPPD_NEW50_new_data_sort_Y.INC'
+path = r'C:\1\1_Field\South_Sunduk\Work files\welltrack_hand\!!USD-11-BGS1_OK'
+df = pd.read_csv(path, delimiter=' ', header=0)
+#df['new_date'] = pd.to_datetime(df['\'DD.MM.YYYY\''], format='%d.%m.%Y')
+#df = df.sort_values(by='new_date', ascending=True)
 #df.to_csv(r'C:\1\4_Scripts\20230803_RECU_FORECAST_NOPPD_NEW50_new_data_sort_Y2.INC', sep='\t', columns=['WELL', '\'DD.MM.YYYY\'', 'MDL', 'MDU', 'RAD', 'SKIN'], index=False)
 ##################df['new_date'] = df['new_date'] - timedelta(days=1)
 print(df)

@@ -1,14 +1,4 @@
-#Definition for singly-linked list.
-class ListNode:
-     def __init__(self, val=0, next=None):
-         self.val = val
-         self.next = next
+my_list = [[1,2], [3, 4], [5,6]]
 
-
-class Solution:
-    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
-        print(l1)
-        print(l2)
-
-y = Solution()
-y.addTwoNumbers([2,4,3], [5,6,4])
+transpose = list(zip(*my_list))
+print(transpose)

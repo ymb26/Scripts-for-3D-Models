@@ -210,11 +210,11 @@ def binaryProcessing(df_all, casename, rdata_path, count):
 
 if __name__ == "__main__":
     df_all = pd.DataFrame()
-    path_folder_mvr = r'Y:\Baronov\PRIOBKA_PPD'
+    path_folder_mvr = r'Z:\Baronov\SPD_PPD_4_wells\250'
     #path_folder_mvr = r'C:\1\1_Field\Multi_var_2\23_MVR_2_case'
     count = 1
-    with pd.ExcelWriter(r'Y:\Baronov\PRIOBKA_PPD\Export_Pebi.xlsx', engine="openpyxl") as writer:
-        with pd.ExcelWriter(r'Y:\Baronov\PRIOBKA_PPD\Intermediate_version.xlsx', engine="openpyxl") as writer2:
+    with pd.ExcelWriter(r'Z:\Baronov\SPD_PPD_4_wells\250\Export_Pebi.xlsx', engine="openpyxl") as writer:
+        with pd.ExcelWriter(r'Z:\Baronov\SPD_PPD_4_wells\250\Intermediate_version.xlsx', engine="openpyxl") as writer2:
             for root, dirs, files in os.walk(path_folder_mvr):
                 feature_of_name = "216k_New_FracAch1_50bar"  ## change on what you search
                 if feature_of_name in root:

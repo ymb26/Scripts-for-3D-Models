@@ -1,7 +1,7 @@
 import os
 
-path_infile = r'Y:\MVR_ORENBURG\2_iter\new_arrangement_new_pressure\9_portov\WELLTRACK\WELLTRACK_9.txt'
-path_outfile = r'Y:\MVR_ORENBURG\2_iter\new_arrangement_new_pressure\9_portov\\FRACFILES\Fracfile_9.txt'
+path_infile = r'C:\1\Alina\WELLTRACK_4.txt'
+path_outfile = r'C:\1\Alina\Fracfile_4.txt'
 
 def writeFractuleFile(MD, number_well, path_outfile):
     out_file = open(path_outfile, 'a')
